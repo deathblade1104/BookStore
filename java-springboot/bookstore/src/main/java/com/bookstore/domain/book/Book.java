@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = TableNames.BOOKS)
+@Table(name = TableNames.BOOKS, indexes = @Index(name = "idx_isbn", columnList = "isbn", unique = true))
 @Getter
 @Setter
 @Builder
@@ -38,11 +38,17 @@ public class Book {
   @Column(nullable = false)
   private Genre genre;
 
-  @Version
-  private Integer version;
-
   @Column(updatable = false, name = "created_at")
   private LocalDateTime createdAt;
+
+  @Column(name = "s3_path", nullable = false)
+  private String s3Path;
+
+  @Column(name = "isbn", nullable = false, unique = true)
+  private String isbn;
+
+  @Version
+  private Integer version; // For optimistic locking to handle race conditions
 
   @Column(name = "updated_at")
   private LocalDateTime updatedAt;
@@ -52,6 +58,7 @@ public class Book {
       createdAt = LocalDateTime.now();
       updatedAt = LocalDateTime.now();
   }
+
   @PreUpdate
   public void preUpdate() {
     updatedAt = LocalDateTime.now();

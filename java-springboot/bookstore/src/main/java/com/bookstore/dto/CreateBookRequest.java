@@ -1,7 +1,6 @@
 package com.bookstore.dto;
 
 import lombok.Data;
-import lombok.NonNull;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
@@ -28,9 +27,15 @@ public class CreateBookRequest {
 
     @NotNull(message = "Author ID is required")
     @Positive(message = "Author ID must be a positive number")
-    @NonNull
     private Long authorId;
 
     @NotNull(message = "Genre is required")
     private Genre genre;
+
+    @NotBlank(message = "ISBN is required")
+    @Pattern(regexp = "^\\d{10}|\\d{13}$", message = "ISBN must be 10 or 13 digits")
+    private String isbn;
+
+    @NotBlank(message = "S3 path is required")
+    private String s3Path;
 }

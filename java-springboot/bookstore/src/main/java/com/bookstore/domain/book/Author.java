@@ -9,7 +9,9 @@ import java.util.List;
 import com.bookstore.constants.TableNames;
 
 @Entity
-@Table(name = TableNames.AUTHORS)
+@Table(name = TableNames.AUTHORS, indexes = {
+    @Index(name = "idx_author_name", columnList = "name")
+})
 @Getter
 @Setter
 @Builder
@@ -27,7 +29,7 @@ public class Author {
     @Column(columnDefinition = "TEXT")
     private String bio;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "author", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Book> books;
 
     @Column(updatable = false, name = "created_at")
